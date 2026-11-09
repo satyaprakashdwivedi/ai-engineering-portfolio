@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": ["Bash(uv run:*)", "Bash(uv sync:*)", "Bash(git status)", "Bash(git diff:*)", "Bash(git log:*)",
+              "Bash(git checkout -b:*)", "Bash(git add:*)", "Bash(git commit:*)", "Bash(ollama:*)"],
+    "deny": ["Read(./.env)", "Bash(git push --force:*)", "Bash(rm -rf:*)"]
+  }
+}

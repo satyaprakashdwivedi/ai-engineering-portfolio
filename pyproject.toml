@@ -1,0 +1,33 @@
+[project]
+name = "ai-engineering-portfolio"
+version = "0.1.0"
+description = "Hands-on portfolio: ML, RAG, LangGraph, multi-agent systems, fine-tuning, LLMOps"
+requires-python = ">=3.11"
+dependencies = [
+  "anthropic>=0.40",
+  "httpx>=0.27",
+  "pydantic>=2.7",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+ml = ["scikit-learn", "xgboost", "pandas", "shap", "mlflow", "fastapi", "uvicorn"]
+dl = ["torch", "transformers", "datasets", "evaluate"]
+rag = ["chromadb", "rank-bm25", "pypdf", "sentence-transformers"]
+agents = ["langgraph>=1.0", "langchain-anthropic", "langchain-ollama", "langgraph-checkpoint-sqlite", "mcp", "langfuse"]
+
+[dependency-groups]
+dev = ["pytest>=8", "pytest-cov", "ruff>=0.6", "pre-commit"]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+markers = ["live: hits a real LLM/API (skipped in CI)"]
