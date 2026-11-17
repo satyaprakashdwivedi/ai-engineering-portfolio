@@ -1,0 +1,37 @@
+name: Claude PR Review
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+  issue_comment:
+    types: [created]
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+jobs:
+  review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Review this PR as a principal ML/AI engineer, following CLAUDE.md.
+            Focus on correctness, test quality, eval methodology, security (prompt injection, unsafe tools,
+            secrets), and cost (token limits, loop bounds). Leave inline comments for concrete issues and a
+            summary comment with a verdict. Be concise.
+          claude_args: "--max-turns 8"
+  mention:
+    # Lets you write "@claude please add tests for X" on any PR/issue comment
+    if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+    permissions: { contents: write, pull-requests: write, issues: write, id-token: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
